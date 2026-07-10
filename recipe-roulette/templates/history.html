@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Recipe History{% endblock %}
+{% block content %}
+<section class="history-page">
+    <div class="container">
+        <h1 class="page-title"><i class="fas fa-clock"></i> Recipe History</h1>
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchHistory" placeholder="Search history..." class="form-input">
+        </div>
+        <div id="historyList" class="history-list"></div>
+        <div id="noHistory" class="empty-state hidden">
+            <i class="fas fa-history"></i>
+            <h3>No history yet</h3>
+            <p>Your viewed recipes will appear here.</p>
+            <a href="/generate" class="btn btn-primary"><i class="fas fa-random"></i> Generate a Recipe</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

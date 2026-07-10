@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Spin the Plate{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-particles"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Cook<span class="highlight">ly</span></h1>
+        <p class="hero-subtitle">Don't know what to cook? Let fate decide.</p>
+        <p class="hero-desc">Enter your ingredients, spin the wheel, and discover delicious recipes tailored to what's in your kitchen.</p>
+        <div class="hero-actions">
+            <a href="/generate" class="btn btn-primary btn-lg">
+                <i class="fas fa-random"></i> Spin the Plate
+            </a>
+            <a href="/favorites" class="btn btn-outline btn-lg">
+                <i class="fas fa-heart"></i> My Favorites
+            </a>
+        </div>
+    </div>
+    <div class="hero-graphics">
+        <div class="floating-icon i1"><i class="fas fa-utensils"></i></div>
+        <div class="floating-icon i2"><i class="fas fa-cheese"></i></div>
+        <div class="floating-icon i3"><i class="fas fa-carrot"></i></div>
+        <div class="floating-icon i4"><i class="fas fa-wine-bottle"></i></div>
+        <div class="floating-icon i5"><i class="fas fa-bread-slice"></i></div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-list"></i></div>
+                <h3>Add Ingredients</h3>
+                <p>Type in what you have in your fridge or pantry.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-dice"></i></div>
+                <h3>Spin & Generate</h3>
+                <p>Our AI creates a unique recipe from your ingredients.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                <h3>Save Favorites</h3>
+                <p>Keep the best recipes for later.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                <h3>Track History</h3>
+                <p>Never lose a recipe you loved.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number" id="statRecipes">0</span>
+                <span class="stat-label">Recipes Generated</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="statFavorites">0</span>
+                <span class="stat-label">Favorites Saved</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="statDifficulty">0</span>
+                <span class="stat-label">Avg. Difficulty</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
