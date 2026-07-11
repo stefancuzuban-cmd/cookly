@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% block title %}Spin the Plate{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-glow g1"></div>
+    <div class="hero-glow g2"></div>
+    <div class="hero-glow g3"></div>
+    <div class="hero-particles"></div>
+    <div class="hero-content">
+        <div class="hero-badge"><i class="fas fa-sparkles"></i> AI-Powered Recipe Generator</div>
+        <h1 class="hero-title">Cook<span class="highlight">ly</span></h1>
+        <div class="hero-divider"></div>
+        <p class="hero-subtitle">Don't know what to cook? Let fate decide.</p>
+        <p class="hero-desc">Enter your ingredients, spin the wheel, and discover delicious recipes tailored to what's in your kitchen — all with beautiful step-by-step instructions.</p>
+        <div class="hero-actions">
+            <a href="/generate" class="btn btn-primary btn-lg">
+                <i class="fas fa-random"></i> Spin the Plate
+            </a>
+            <a href="#random-recipes" class="btn btn-outline btn-lg">
+                <i class="fas fa-list"></i> Random Recipes
+            </a>
+        </div>
+    </div>
+    <div class="hero-graphics">
+        <div class="floating-icon fi-terracotta i1"><i class="fas fa-utensils"></i></div>
+        <div class="floating-icon fi-olive i2"><i class="fas fa-cheese"></i></div>
+        <div class="floating-icon fi-ochre i3"><i class="fas fa-carrot"></i></div>
+        <div class="floating-icon fi-brown i4"><i class="fas fa-wine-bottle"></i></div>
+        <div class="floating-icon fi-taupe i5"><i class="fas fa-bread-slice"></i></div>
+        <div class="floating-icon fi-terracotta i6"><i class="fas fa-fish"></i></div>
+        <div class="floating-icon fi-olive i7"><i class="fas fa-apple-alt"></i></div>
+        <div class="floating-icon fi-ochre i8"><i class="fas fa-cocktail"></i></div>
+        <div class="floating-icon fi-brown i9"><i class="fas fa-seedling"></i></div>
+        <div class="floating-icon fi-taupe i10"><i class="fas fa-drumstick-bite"></i></div>
+        <div class="floating-icon fi-terracotta i11"><i class="fas fa-egg"></i></div>
+        <div class="floating-icon fi-olive i12"><i class="fas fa-lemon"></i></div>
+        <div class="floating-icon fi-ochre i13"><i class="fas fa-pepper-hot"></i></div>
+        <div class="floating-icon fi-brown i14"><i class="fas fa-wheat-awn"></i></div>
+        <div class="floating-icon fi-taupe i15"><i class="fas fa-stroopwafel"></i></div>
+        <div class="floating-icon fi-terracotta i16"><i class="fas fa-cucumber"></i></div>
+        <div class="floating-icon fi-olive i17"><i class="fas fa-shrimp"></i></div>
+        <div class="floating-icon fi-ochre i18"><i class="fas fa-pizza-slice"></i></div>
+        <div class="floating-icon fi-brown i19"><i class="fas fa-mug-hot"></i></div>
+        <div class="floating-icon fi-taupe i20"><i class="fas fa-bowl-food"></i></div>
+        <div class="floating-icon fi-terracotta i21"><i class="fas fa-bacon"></i></div>
+        <div class="floating-icon fi-olive i22"><i class="fas fa-jar"></i></div>
+        <div class="floating-icon fi-ochre i23"><i class="fas fa-mushroom"></i></div>
+        <div class="floating-icon fi-brown i24"><i class="fas fa-pancakes"></i></div>
+        <div class="floating-icon fi-olive i25"><i class="fas fa-leaf"></i></div>
+        <div class="floating-icon fi-ochre i26"><i class="fas fa-cookie"></i></div>
+        <div class="floating-icon fi-terracotta i27"><i class="fas fa-hotdog"></i></div>
+        <div class="floating-icon fi-brown i28"><i class="fas fa-bowl-rice"></i></div>
+        <div class="floating-icon fi-olive i29"><i class="fas fa-broccoli"></i></div>
+        <div class="floating-icon fi-taupe i30"><i class="fas fa-can-food"></i></div>
+        <div class="floating-icon fi-ochre i31"><i class="fas fa-champagne-glasses"></i></div>
+        <div class="floating-icon fi-terracotta i32"><i class="fas fa-chicken"></i></div>
+        <div class="floating-icon fi-brown i33"><i class="fas fa-coconut"></i></div>
+        <div class="floating-icon fi-olive i34"><i class="fas fa-corn"></i></div>
+        <div class="floating-icon fi-ochre i35"><i class="fas fa-crab"></i></div>
+        <div class="floating-icon fi-taupe i36"><i class="fas fa-croissant"></i></div>
+        <div class="floating-icon fi-terracotta i37"><i class="fas fa-donut"></i></div>
+        <div class="floating-icon fi-brown i38"><i class="fas fa-fish-cooked"></i></div>
+        <div class="floating-icon fi-olive i39"><i class="fas fa-flask"></i></div>
+        <div class="floating-icon fi-ochre i40"><i class="fas fa-honey-pot"></i></div>
+    </div>
+</section>
+
+<section class="features">
+    <div class="container">
+        <h2 class="section-title">How It Works</h2>
+        <span class="section-title-divider"></span>
+        <p class="section-subtitle">From your kitchen to the table in three simple steps</p>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-list"></i></div>
+                <h3>Add Ingredients</h3>
+                <p>Type in what you have in your fridge or pantry — chicken, rice, tomatoes, anything goes.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-dice"></i></div>
+                <h3>Spin & Generate</h3>
+                <p>Our AI creates a unique, detailed recipe from your ingredients with cooking times and tips.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                <h3>Save Favorites</h3>
+                <p>Keep the best recipes for later and build your personal cookbook.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <div class="feature-icon"><i class="fas fa-clock"></i></div>
+                <h3>Track History</h3>
+                <p>Never lose a recipe you loved — your full history is always available.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="random-recipes" id="random-recipes">
+    <div class="container">
+        <h2 class="section-title">Random Recipes</h2>
+        <span class="section-title-divider"></span>
+        <p class="section-subtitle">A rotating selection of recipes from the Cookly vault</p>
+        <div class="random-grid" id="randomGrid"></div>
+        <div class="random-more">
+            <a href="/recipes" class="btn btn-outline"><i class="fas fa-book-open"></i> Browse All Recipes</a>
+            <button class="btn btn-primary" id="shuffleBtn"><i class="fas fa-shuffle"></i> Shuffle</button>
+        </div>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-utensils"></i></div>
+                <span class="stat-number" id="statRecipes">0</span>
+                <span class="stat-label">Recipes Generated</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-heart"></i></div>
+                <span class="stat-number" id="statFavorites">0</span>
+                <span class="stat-label">Favorites Saved</span>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-signal"></i></div>
+                <span class="stat-number" id="statDifficulty">0</span>
+                <span class="stat-label">Avg. Difficulty</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="recipeModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <div class="modal-body"></div>
+    </div>
+</div>
+{% endblock %}

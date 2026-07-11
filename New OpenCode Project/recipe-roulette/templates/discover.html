@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block title %}Discover Recipes{% endblock %}
+{% block content %}
+<section class="discover-page">
+    <div class="container">
+        <h1 class="page-title"><span class="title-icon"><i class="fas fa-globe"></i></span> Discover</h1>
+        <p class="page-subtitle">Random recipes from around the world — powered by TheMealDB.</p>
+
+        <div class="search-bar" style="max-width:100%">
+            <i class="fas fa-search"></i>
+            <input type="text" id="discoverSearch" placeholder="Search recipes (e.g., pizza, chicken, pasta)..." class="form-input">
+        </div>
+        <div class="discover-toolbar">
+            <span class="recipe-count" id="discoverCount">Loading...</span>
+            <button class="btn btn-primary" id="refreshBtn"><i class="fas fa-shuffle"></i> New Batch</button>
+        </div>
+
+        <div id="discoverGrid" class="discover-grid"></div>
+        <div id="discoverLoading" class="loading-section">
+            <div class="spinner-container">
+                <div class="spinner-ring"></div>
+                <div class="spinner-icon"><i class="fas fa-globe"></i></div>
+            </div>
+            <p class="loading-text">Discovering recipes from around the world...</p>
+            <div class="loading-bar"><div class="loading-fill"></div></div>
+        </div>
+    </div>
+</section>
+
+<div id="recipeModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <div class="modal-body"></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('discoverGrid');
+    const loading = document.getElementById('discoverLoading');
+    const countEl = document.getElementById('discoverCount');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const searchInput = document.getElementById('discoverSearch');
+    const modal = document.getElementById('recipeModal');
+    var searchTimeout;
+
+    loadDiscover();
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                loadDiscover(searchInput.value.trim());
+            }, 400);
+        });
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                clearTimeout(searchTimeout);
+                loadDiscover(searchInput.value.trim());
+            }
+        });
+    }
+
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', () => {
+            refreshBtn.disabled = true;
+            refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+            if (searchInput) searchInput.value = '';
+            loadDiscover();
+        });
+    }
+
+    async function loadDiscover(search) {
+        grid.innerHTML = '';
+        loading.classList.remove('hidden');
+        try {
+            var data;
+            if (search) {
+                data = await API.discoverRecipes(12, search);
+            } else {
+                data = await API.discoverRecipes();
+            }
+            countEl.textContent = data.length + ' recipes';
+            if (data.length === 0) {
+                grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon"><i class="fas fa-globe"></i></div><h3>Couldn\'t load recipes</h3><p>Try again or check your connection.</p></div>';
+                loading.classList.add('hidden');
+                return;
+            }
+            grid.innerHTML = data.map(function(r) {
+                var tagStr = r.tags ? r.tags.split(',').slice(0, 3).map(function(t) { return '<span class="discover-tag">' + t.trim() + '</span>'; }).join('') : '';
+                var flag = r.area ? r.area : '';
+                return '<div class="discover-card" data-id="' + r.id + '">'
+                    + '<div class="discover-img" style="background-image:url(' + r.image + ')"></div>'
+                    + '<div class="discover-body">'
+                    + '<div class="discover-cat">' + (r.category || 'Various') + (flag ? ' · ' + flag : '') + '</div>'
+                    + '<h4>' + r.name + '</h4>'
+                    + (tagStr ? '<div class="discover-tags">' + tagStr + '</div>' : '')
+                    + '<div class="discover-meta"><span><i class="fas fa-utensils"></i> ' + r.ingredients.length + ' ingredients</span></div>'
+                    + '</div></div>';
+            }).join('');
+            grid.querySelectorAll('.discover-card').forEach(function(card) {
+                card.addEventListener('click', function() { openDiscoverModal(parseInt(card.dataset.id), data); });
+            });
+        } catch (err) {
+            countEl.textContent = 'Failed to load';
+            grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon"><i class="fas fa-exclamation-circle"></i></div><h3>Something went wrong</h3><p>Could not fetch recipes. Please try again.</p></div>';
+        }
+        loading.classList.add('hidden');
+        if (refreshBtn) {
+            refreshBtn.disabled = false;
+            refreshBtn.innerHTML = '<i class="fas fa-shuffle"></i> New Batch';
+        }
+    }
+
+    var cachedMeals = {};
+
+    function openDiscoverModal(id, allMeals) {
+        if (!modal) return;
+        var recipe = allMeals ? allMeals.find(function(m) { return m.id == id; }) : null;
+        if (!recipe) return;
+        cachedMeals[id] = recipe;
+
+        var body = modal.querySelector('.modal-body');
+        var instLines = recipe.instructions.split(/\r?\n/).filter(function(l) { return l.trim(); });
+        var youtubeHtml = recipe.youtube
+            ? '<div class="recipe-section video-section"><div class="video-header"><span class="video-icon"><i class="fab fa-youtube"></i></span><h3>Video Tutorial</h3></div><p>Watch the original recipe video on YouTube.</p><a href="' + recipe.youtube + '" target="_blank" rel="noopener" class="video-button"><span class="play-icon"><i class="fas fa-play"></i></span><div class="btn-text"><span>Watch on YouTube</span><span>' + recipe.name + '</span></div><i class="fas fa-arrow-right arrow"></i></a></div>'
+            : '';
+
+        body.innerHTML = '<div class="recipe-card" style="box-shadow:none;padding:0">'
+            + '<div class="recipe-header-top">'
+            + '<span class="recipe-category cat-dinner"><i class="fas fa-tag"></i> ' + (recipe.category || 'Various') + '</span>'
+            + (recipe.area ? '<span style="font-size:0.82rem;color:var(--text-muted)"><i class="fas fa-map-pin"></i> ' + recipe.area + '</span>' : '')
+            + '</div>'
+            + '<h2 class="recipe-name">' + recipe.name + '</h2>'
+            + '<p class="recipe-name-sub">A traditional ' + (recipe.area || 'international') + ' dish</p>'
+            + '<div class="recipe-section"><h3><i class="fas fa-shopping-basket"></i> Ingredients <span class="section-badge ingredient-count">' + recipe.ingredients.length + ' items</span></h3>'
+            + '<ul class="ingredient-list">' + recipe.ingredients.map(function(i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>'
+            + '<div class="recipe-section"><h3><i class="fas fa-list-ol"></i> Instructions</h3>'
+            + '<ol class="instruction-list">' + instLines.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ol></div>'
+            + youtubeHtml + '</div>';
+
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    if (modal) {
+        modal.querySelector('.modal-close').addEventListener('click', closeDiscoverModal);
+        modal.querySelector('.modal-backdrop').addEventListener('click', closeDiscoverModal);
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeDiscoverModal(); });
+    }
+
+    function closeDiscoverModal() {
+        if (modal) {
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+});
+</script>
+{% endblock %}

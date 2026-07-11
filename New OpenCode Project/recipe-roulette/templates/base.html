@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookly - {% block title %}Spin the Plate{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <span class="logo-icon"><i class="fas fa-dice"></i></span>
+                <span>Cookly</span>
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="/generate"><i class="fas fa-random"></i> Generate</a></li>
+                <li><a href="/discover"><i class="fas fa-globe"></i> Discover</a></li>
+                <li><a href="/recipes"><i class="fas fa-book-open"></i> Recipes</a></li>
+                <li><a href="/favorites"><i class="fas fa-heart"></i> Favorites</a></li>
+                <li><a href="/history"><i class="fas fa-clock"></i> History</a></li>
+                {% if session.user_id %}
+                    <li class="nav-user">
+                        <span class="user-avatar">{{ session.username[:1].upper() }}</span>
+                        <span>{{ session.username }}</span>
+                        <a href="/logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </li>
+                {% else %}
+                    <li><a href="/login" class="btn-auth"><i class="fas fa-sign-in-alt"></i> Sign In</a></li>
+                    <li><a href="/register" class="btn-auth btn-auth-register"><i class="fas fa-user-plus"></i> Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

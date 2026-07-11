@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My Favorites{% endblock %}
+{% block content %}
+<section class="favorites-page">
+    <div class="container">
+        <h1 class="page-title"><span class="title-icon"><i class="fas fa-heart"></i></span> My Favorite Recipes</h1>
+        <p class="page-subtitle">Your saved collection of hand-picked recipes.</p>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchFavorites" placeholder="Search favorites..." class="form-input">
+        </div>
+
+        <div id="favoritesGrid" class="recipes-grid"></div>
+
+        <div id="noFavorites" class="empty-state hidden">
+            <div class="empty-icon"><i class="fas fa-heart-broken"></i></div>
+            <h3>No favorites yet</h3>
+            <p>Generate some recipes and save your favorites — they'll appear here.</p>
+            <a href="/generate" class="btn btn-primary"><i class="fas fa-random"></i> Generate Recipes</a>
+        </div>
+    </div>
+</section>
+
+<div id="recipeModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <div class="modal-body"></div>
+    </div>
+</div>
+{% endblock %}

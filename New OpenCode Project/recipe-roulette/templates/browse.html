@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}All Recipes{% endblock %}
+{% block content %}
+<section class="browse-page">
+    <div class="container">
+        <h1 class="page-title"><span class="title-icon"><i class="fas fa-book-open"></i></span> All Recipes</h1>
+        <p class="page-subtitle">Browse, search, and rediscover your generated recipes.</p>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchRecipes" placeholder="Search recipes by name..." class="form-input">
+        </div>
+
+        <div class="browse-controls">
+            <div class="filter-group">
+                <select id="filterCategory" class="form-input filter-select">
+                    <option value="">All Categories</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Dinner">Dinner</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Snack">Snack</option>
+                </select>
+                <select id="filterDifficulty" class="form-input filter-select">
+                    <option value="">Any Difficulty</option>
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+            <span class="recipe-count" id="recipeCount">0 recipes</span>
+        </div>
+
+        <div id="recipesGrid" class="recipes-grid"></div>
+
+        <div id="noRecipes" class="empty-state hidden">
+            <div class="empty-icon"><i class="fas fa-utensils"></i></div>
+            <h3>No recipes yet</h3>
+            <p>Generate your first recipe to see it here, or try adjusting your search filters.</p>
+            <a href="/generate" class="btn btn-primary"><i class="fas fa-random"></i> Generate a Recipe</a>
+        </div>
+    </div>
+</section>
+
+<div id="recipeModal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+        <button class="modal-close"><i class="fas fa-times"></i></button>
+        <div class="modal-body"></div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const grid = document.getElementById('recipesGrid');
+    const empty = document.getElementById('noRecipes');
+    const searchInput = document.getElementById('searchRecipes');
+    const categoryFilter = document.getElementById('filterCategory');
+    const diffFilter = document.getElementById('filterDifficulty');
+    const countEl = document.getElementById('recipeCount');
+    const modal = document.getElementById('recipeModal');
+
+    const catColors = { Breakfast: 'cat-breakfast', Lunch: 'cat-lunch', Dinner: 'cat-dinner', Dessert: 'cat-dessert', Snack: 'cat-snack' };
+    const diffMeta = { easy: 'meta-diff-easy', medium: 'meta-diff-medium', hard: 'meta-diff-hard' };
+
+    async function loadRecipes() {
+        const params = {};
+        const q = searchInput.value.trim();
+        if (q) params.search = q;
+        const cat = categoryFilter.value;
+        if (cat) params.category = cat;
+        const diff = diffFilter.value;
+        if (diff) params.difficulty = diff;
+        try {
+            const data = await API.getRecipes(params);
+            countEl.textContent = data.length + ' recipe' + (data.length !== 1 ? 's' : '');
+            if (data.length === 0) { grid.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+            grid.innerHTML = data.map(function(r) {
+                var catClass = catColors[r.category] || 'cat-dinner';
+                var diffClass = diffMeta[r.difficulty ? r.difficulty.toLowerCase() : ''] || 'meta-diff-medium';
+                return '<div class="recipe-card-mini" data-id="' + r.id + '">'
+                    + '<div class="mini-category"><span class="recipe-category ' + catClass + '"><i class="fas fa-tag"></i> ' + (r.category || 'Dinner') + '</span></div>'
+                    + '<h3>' + r.name + '</h3>'
+                    + '<div class="mini-meta">'
+                    + '<span><i class="fas fa-clock"></i> ' + (r.cooking_time || 30) + ' min</span>'
+                    + '<span class="' + diffClass + '" style="padding:0;background:none"><i class="fas fa-signal"></i> ' + (r.difficulty || 'Medium') + '</span>'
+                    + '<span><i class="fas fa-star" style="color:#f4d35e"></i> ' + (r.rating || 3) + '</span>'
+                    + '</div></div>';
+            }).join('');
+            grid.querySelectorAll('.recipe-card-mini').forEach(function(card) {
+                card.addEventListener('click', function() { openModal(parseInt(card.dataset.id)); });
+            });
+        } catch (err) { showToast('Failed to load recipes', 'error'); }
+    }
+
+    async function openModal(recipeId) {
+        try {
+            const recipe = await API.getRecipe(recipeId);
+            const body = modal.querySelector('.modal-body');
+            var ingArray, instArray;
+            try { ingArray = JSON.parse(recipe.ingredients); } catch(e) { ingArray = [recipe.ingredients]; }
+            try { instArray = JSON.parse(recipe.instructions); } catch(e) { instArray = [recipe.instructions]; }
+            var catClass = catColors[recipe.category] || 'cat-dinner';
+            var diffClass = diffMeta[recipe.difficulty ? recipe.difficulty.toLowerCase() : ''] || 'meta-diff-medium';
+            var searchQ = encodeURIComponent(recipe.name + ' recipe tutorial');
+            body.innerHTML = '<div class="recipe-card" style="box-shadow:none;padding:0">'
+                + '<div class="recipe-header-top">'
+                + '<span class="recipe-category ' + catClass + '"><i class="fas fa-tag"></i> ' + (recipe.category || 'Dinner') + '</span>'
+                + '<div class="recipe-rating">' + '<i class="fas fa-star"></i>'.repeat(Math.round(recipe.rating || 3)) + '</div></div>'
+                + '<h2 class="recipe-name">' + recipe.name + '</h2>'
+                + '<p class="recipe-name-sub">A delicious ' + (recipe.category || 'meal').toLowerCase() + ' recipe</p>'
+                + '<div class="recipe-meta">'
+                + '<span class="meta-badge meta-time"><i class="fas fa-clock"></i> ' + (recipe.cooking_time || 30) + ' min</span>'
+                + '<span class="meta-badge ' + diffClass + '"><i class="fas fa-signal"></i> ' + (recipe.difficulty || 'Medium') + '</span>'
+                + '<span class="meta-badge meta-rating"><i class="fas fa-star"></i> ' + (recipe.rating || 3) + '</span></div>'
+                + '<div class="recipe-section"><h3><i class="fas fa-shopping-basket"></i> Ingredients <span class="section-badge ingredient-count">' + ingArray.length + ' items</span></h3>'
+                + '<ul class="ingredient-list">' + ingArray.map(function(i) { return '<li>' + i + '</li>'; }).join('') + '</ul></div>'
+                + '<div class="recipe-section"><h3><i class="fas fa-list-ol"></i> Instructions</h3>'
+                + '<ol class="instruction-list">' + instArray.map(function(s) { return '<li>' + s + '</li>'; }).join('') + '</ol></div>'
+                + '<div class="recipe-section video-section">'
+                + '<div class="video-header"><span class="video-icon"><i class="fab fa-youtube"></i></span><h3>Video Tutorial</h3></div>'
+                + '<p>Follow along with a step-by-step cooking guide for ' + recipe.name + '.</p>'
+                + '<a href="https://www.youtube.com/results?search_query=' + searchQ + '" target="_blank" rel="noopener" class="video-button">'
+                + '<span class="play-icon"><i class="fas fa-play"></i></span>'
+                + '<div class="btn-text"><span>Find Recipe on YouTube</span><span>Search YouTube for "' + recipe.name + '"</span></div>'
+                + '<i class="fas fa-arrow-right arrow"></i></a></div></div>';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            API.addHistory(recipeId).catch(function() {});
+        } catch (err) { showToast('Failed to load recipe', 'error'); }
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden'); document.body.style.overflow = '';
+    }
+    modal.querySelector('.modal-close').addEventListener('click', closeModal);
+    modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
+    searchInput.addEventListener('input', loadRecipes);
+    categoryFilter.addEventListener('change', loadRecipes);
+    diffFilter.addEventListener('change', loadRecipes);
+    loadRecipes();
+});
+</script>
+{% endblock %}

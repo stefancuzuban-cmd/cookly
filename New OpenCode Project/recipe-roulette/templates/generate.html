@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Generate Recipe{% endblock %}
+{% block content %}
+<section class="generate-page">
+    <div class="container">
+        <h1 class="page-title"><span class="title-icon"><i class="fas fa-random"></i></span> Recipe Generator</h1>
+        <p class="page-subtitle">Enter your ingredients and let Cookly create a delicious recipe for you.</p>
+
+        <div class="ingredient-section">
+            <div class="section-label"><i class="fas fa-apple-alt"></i> Your Ingredients</div>
+            <div class="input-group">
+                <input type="text" id="ingredientInput" placeholder="e.g., chicken, rice, tomatoes..." class="form-input">
+                <button id="addIngredientBtn" class="btn btn-primary"><i class="fas fa-plus"></i> Add</button>
+            </div>
+            <div class="suggestions">
+                <span class="suggestion-chip" data-ing="chicken"><i class="fas fa-drumstick-bite"></i> Chicken</span>
+                <span class="suggestion-chip" data-ing="rice"><i class="fas fa-seedling"></i> Rice</span>
+                <span class="suggestion-chip" data-ing="pasta"><i class="fas fa-wheat"></i> Pasta</span>
+                <span class="suggestion-chip" data-ing="tomatoes"><i class="fas fa-apple-alt"></i> Tomatoes</span>
+                <span class="suggestion-chip" data-ing="eggs"><i class="fas fa-egg"></i> Eggs</span>
+                <span class="suggestion-chip" data-ing="cheese"><i class="fas fa-cheese"></i> Cheese</span>
+                <span class="suggestion-chip" data-ing="potatoes"><i class="fas fa-carrot"></i> Potatoes</span>
+                <span class="suggestion-chip" data-ing="onions"><i class="fas fa-circle"></i> Onions</span>
+            </div>
+            <div class="ingredient-tags" id="ingredientTags"></div>
+            <button id="generateBtn" class="btn btn-accent btn-lg btn-block" disabled>
+                <i class="fas fa-dice"></i> Generate Recipe
+            </button>
+        </div>
+
+        <div id="loadingSection" class="loading-section hidden">
+            <div class="spinner-container">
+                <div class="spinner-ring"></div>
+                <div class="spinner-icon"><i class="fas fa-cheese"></i></div>
+            </div>
+            <p class="loading-text">Cooking up something delicious...</p>
+            <p class="loading-subtext">Our AI is crafting the perfect recipe for your ingredients</p>
+            <div class="loading-bar"><div class="loading-fill"></div></div>
+        </div>
+
+        <div id="recipeResult" class="recipe-result hidden">
+            <div class="recipe-card featured-card">
+                <div class="recipe-header-top">
+                    <span class="recipe-category cat-dinner" id="recipeCategory"><i class="fas fa-tag"></i> Dinner</span>
+                    <div class="recipe-rating" id="recipeRating"></div>
+                </div>
+                <h2 class="recipe-name" id="recipeName"></h2>
+                <p class="recipe-name-sub" id="recipeNameSub">A delicious meal made just for you</p>
+                <div class="recipe-meta">
+                    <span class="meta-badge meta-time" id="metaTime"><i class="fas fa-clock"></i> <span id="recipeTime"></span> min</span>
+                    <span class="meta-badge meta-diff-medium" id="metaDifficulty"><i class="fas fa-signal"></i> <span id="recipeDifficulty"></span></span>
+                    <span class="meta-badge meta-rating" id="metaRatingDisplay"><i class="fas fa-star"></i> Rating</span>
+                </div>
+                <div class="recipe-section">
+                    <h3><i class="fas fa-shopping-basket"></i> Ingredients <span class="section-badge ingredient-count" id="ingredientCount">0 items</span></h3>
+                    <ul id="recipeIngredients" class="ingredient-list"></ul>
+                </div>
+                <div class="recipe-section">
+                    <h3><i class="fas fa-list-ol"></i> Instructions</h3>
+                    <ol id="recipeInstructions" class="instruction-list"></ol>
+                </div>
+                <div id="videoSection" class="recipe-section video-section hidden">
+                    <div class="video-header">
+                        <span class="video-icon"><i class="fab fa-youtube"></i></span>
+                        <h3>Video Tutorial</h3>
+                    </div>
+                    <p id="videoDesc">Follow along with a step-by-step cooking guide for this recipe on YouTube.</p>
+                    <a id="videoLink" href="#" target="_blank" rel="noopener" class="video-button">
+                        <span class="play-icon"><i class="fas fa-play"></i></span>
+                        <div class="btn-text">
+                            <span>Find Recipe on YouTube</span>
+                            <span id="videoSubtext">Opens in a new tab</span>
+                        </div>
+                        <i class="fas fa-arrow-right arrow"></i>
+                    </a>
+                </div>
+                <div class="recipe-actions">
+                    <button class="btn btn-primary" id="saveFavoriteBtn"><i class="fas fa-heart"></i> Save to Favorites</button>
+                    <button class="btn btn-ochre" id="newRecipeBtn"><i class="fas fa-redo"></i> New Recipe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

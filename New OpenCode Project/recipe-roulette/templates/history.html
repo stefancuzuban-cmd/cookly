@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Recipe History{% endblock %}
+{% block content %}
+<section class="history-page">
+    <div class="container">
+        <h1 class="page-title"><span class="title-icon"><i class="fas fa-clock"></i></span> Recipe History</h1>
+        <p class="page-subtitle">Your recently viewed recipes, always within reach.</p>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchHistory" placeholder="Search history..." class="form-input">
+        </div>
+
+        <div id="historyList" class="history-list"></div>
+
+        <div id="noHistory" class="empty-state hidden">
+            <div class="empty-icon"><i class="fas fa-history"></i></div>
+            <h3>No history yet</h3>
+            <p>Your viewed recipes will appear here as you explore Cookly.</p>
+            <a href="/generate" class="btn btn-primary"><i class="fas fa-random"></i> Generate a Recipe</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
